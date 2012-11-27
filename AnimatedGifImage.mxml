@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Image xmlns:fx="http://ns.adobe.com/mxml/2009" 
+         xmlns:s="library://ns.adobe.com/flex/spark" 
+         xmlns:mx="library://ns.adobe.com/flex/mx">
+    <fx:Script>
+        <![CDATA[
+            import org.bytearray.gif.events.FrameEvent;
+            import org.bytearray.gif.player.GIFPlayer;
+
+            private var _gifPlayer:GIFPlayer;
+                                    
+            override public function set source(value:Object):void
+            {       
+                disposeGifPlayerIfExists();
+                
+                if (value == null || value == "")
+                    return;
+                                
+                createGifPlayerIfNotExists();
+                                    
+                loadGif(value);
+            }
+                        
+            private function disposeGifPlayerIfExists():void
+            {
+                if (_gifPlayer)
+                {   
+                    _gifPlayer.dispose();
+                }               
+            }
+            
+            private function createGifPlayerIfNotExists():void
+            {
+                if (!_gifPlayer)
+                {
+                    _gifPlayer = new GIFPlayer();
+                    _gifPlayer.addEventListener(FrameEvent.FRAME_RENDERED, gifPlayer_frameRenderedEventHandler);
+                }               
+            }
+            
+            private function gifPlayer_frameRenderedEventHandler(e:FrameEvent):void
+            {
+                super.source = _gifPlayer.bitmapData;
+            }           
+            
+            private function loadGif(value:Object):void
+            {
+                switch(getValueType(value))
+                {
+                    case String:
+                        _gifPlayer.load(new URLRequest(value as String));
+                        break;
+                    case ByteArray:
+                        _gifPlayer.loadBytes(value as ByteArray);
+                        break;
+                }               
+            }
+            
+            private function getValueType(value:Object):Object
+            {
+                var className:String = flash.utils.getQualifiedClassName(value);
+                return flash.utils.getDefinitionByName(className);              
+            }           
+        ]]>
+    </fx:Script>
+</s:Image>
