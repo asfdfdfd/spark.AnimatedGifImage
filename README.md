@@ -20,4 +20,4 @@ Usage example
 <component:AnimatedGifImage source="{_source}" width="100%" height="100%" scaleMode="stretch" fillMode="scale" />
 ```
 
-*_source* may be URL or ByteArray.
+*_source* may be String with url address or ByteArray with binary data.
